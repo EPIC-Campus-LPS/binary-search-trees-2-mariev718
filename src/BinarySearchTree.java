@@ -125,12 +125,28 @@ public class BinarySearchTree {
 
     public void printInorder() {
 
-        TreeNode<Integer> current = root;
-
         int count = 0;
-        while(count < numNodes){
+
+        while(count < height) {
+
+            TreeNode<Integer> current = root;
+
+            while (current.getLeftChild().getLeftChild() != null) {
+
+                current = current.getLeftChild();
+
+                count++;
+
+            }
+
+            System.out.println(current.getLeftChild().getValue());
+            System.out.println(current.getValue());
+
+            if (current.getRightChild() != null) {
 
 
+
+            }
 
         }
 
@@ -138,7 +154,31 @@ public class BinarySearchTree {
 
     public void printPreorder() {
 
+        TreeNode<Integer> current = root;
 
+        int count = 0;
+
+        while(count < numNodes) {
+
+            while(current.getLeftChild().getLeftChild() != null) {
+
+                System.out.println(current.getValue());
+                current = current.getLeftChild();
+
+                count += 1;
+
+            }
+
+            System.out.println(current.getLeftChild());
+            count += 1;
+
+            if(current.getRightChild() != null) {
+
+                current = current.getRightChild();
+
+            }
+
+        }
 
     }
 
