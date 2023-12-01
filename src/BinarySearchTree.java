@@ -15,8 +15,10 @@ public class BinarySearchTree {
         // if there are no nodes yet, current becomes the root
         if(numNodes == 0) {
 
-            root.setValue(value);
+            TreeNode<Integer> temp = new TreeNode<>(value, null, null);
+            root = temp;
             numNodes++;
+            numLeafNodes++;
 
         } else {
 
@@ -57,6 +59,15 @@ public class BinarySearchTree {
             count ++;
 
             if(count > height) height = count;
+
+            // If the current node has both children after adding the new node as a child, num leaf node increases by 1
+            // If it only has one child after adding the new node,
+            // leaf node num stays the same because current is not a leaf anymore but the child is
+            if(current.getLeftChild() != null & current.getRightChild() != null) {
+
+                numLeafNodes++;
+
+            }
 
         }
 
@@ -117,41 +128,32 @@ public class BinarySearchTree {
 
     }
 
+    public int countLeafNodes() {
+
+        return numLeafNodes;
+
+    }
+
     public int getHeight() {
 
         return height;
 
     }
 
+    // WIP
     public void printInorder() {
 
-        int count = 0;
-
-        while(count < height) {
-
-            TreeNode<Integer> current = root;
-
-            while (current.getLeftChild().getLeftChild() != null) {
-
-                current = current.getLeftChild();
-
-                count++;
-
-            }
-
-            System.out.println(current.getLeftChild().getValue());
-            System.out.println(current.getValue());
-
-            if (current.getRightChild() != null) {
-
-
-
-            }
-
-        }
+        printInorder(root);
 
     }
 
+    public void printInorder(TreeNode<Integer> node) {
+
+
+
+    }
+
+    // WIP
     public void printPreorder() {
 
         TreeNode<Integer> current = root;
@@ -190,7 +192,7 @@ public class BinarySearchTree {
 
     public int delete(int value) {
 
-
+        return 0;
 
     }
 
