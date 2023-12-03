@@ -3,7 +3,6 @@ import java.security.InvalidParameterException;
 public class BinarySearchTree {
 
     // PIVs
-    private int height = 0;
     private int numNodes = 0;
     private int numLeafNodes = 0;
     private TreeNode<Integer> root = new TreeNode<>(0, null, null);
@@ -27,7 +26,6 @@ public class BinarySearchTree {
 
             TreeNode<Integer> current = root;
             TreeNode<Integer> temp = new TreeNode<>(value, null, null);
-            int count = 0;
 
             // checks to make sure neither child is missing
             // if one child is missing, it will check if the current value can be the remaining child's child
@@ -44,8 +42,6 @@ public class BinarySearchTree {
 
                 }
 
-                count++;
-
             }
 
             if (value <= current.getValue()) {
@@ -59,9 +55,6 @@ public class BinarySearchTree {
             }
 
             numNodes++;
-            count++;
-
-            if (count > height) height = count;
 
             // If the current node has both children after adding the new node as a child, num leaf node increases by 1
             // If it only has one child after adding the new node,
@@ -78,50 +71,19 @@ public class BinarySearchTree {
 
     public boolean contains(int value) {
 
-        if (numNodes == 0) {
+        return contains(value, root);
 
-            return false;
+    }
 
-        }
+    public boolean contains(int value, TreeNode<Integer> node) {
 
-        TreeNode<Integer> current = root;
+        if(node == null) return false;
 
-        while (value != current.getValue() &&
-                ((current.getLeftChild() != null || value > current.getValue())
-                        && (current.getRightChild() != null || value <= current.getValue()))) {
+        if(node.getValue() == value) return true;
 
-            if (value <= current.getValue()) {
+        if(value < node.getValue()) return contains(value, node.getLeftChild());
 
-                current = current.getLeftChild();
-
-            } else {
-
-                current = current.getRightChild();
-
-            }
-
-        }
-
-        if (value == current.getValue()) return true;
-        if (value <= current.getValue()) {
-            if (current.getLeftChild() != null) {
-
-                current = current.getLeftChild();
-
-            }
-
-        } else {
-            if (current.getRightChild() != null) {
-
-                current = current.getRightChild();
-
-            }
-
-        }
-
-        if (value == current.getValue()) return true;
-
-        return false;
+        return contains(value, node.getRightChild());
 
     }
 
@@ -139,7 +101,21 @@ public class BinarySearchTree {
 
     public int getHeight() {
 
-        return height;
+        return getHeight(root, 0) - 1;
+
+    }
+
+    public int getHeight(TreeNode<Integer> node, int count) {
+
+        if(node == null) return count;
+
+        count++;
+
+        int left = getHeight(node.getLeftChild(), count);
+        int right = getHeight(node.getRightChild(), count);
+
+        if(left > right) return left;
+        return right;
 
     }
 
@@ -194,37 +170,61 @@ public class BinarySearchTree {
 
     public int delete(int value) {
 
-        if(!contains(value)) {
+        TreeNode<Integer> temp = delete(value, root);
 
-            throw new InvalidParameterException("Tree does not contain value: " + value);
+//        if(temp.getLeftChild() == null && temp.getRightChild() == null) {
+//
+//            temp = null;
+//
+//        } else if(temp.getLeftChild() != null) {
+//
+//            temp = temp.getLeftChild();
+//
+//        } else if(temp.getRightChild() != null) {
+//
+//            temp = temp.getRightChild();
+//
+//        } else {
+//
+//            TreeNode<Integer> rightTemp = temp.getRightChild();
+//
+//            temp = temp.getLeftChild();
+//
+//            TreeNode<Integer> right = temp.getRightChild();
+//
+//            while(right.getRightChild() != null) {
+//
+//                right = right.getRightChild();
+//
+//            }
+//
+//            right.setRightChild(rightTemp);
+//
+//        }
 
-        }
-
-        delete(value, root);
-
-        return 0;
+        return value;
 
     }
 
     public TreeNode<Integer> delete(int value, TreeNode<Integer> node) {
 
-        if(node == null) return node;
+        if(node == null) {
 
-        if(value < node.getValue()) {
-
-            delete(value, node.getLeftChild());
-            return node;
-
-        } else if (value > node.getValue()) {
-
-            delete(value, node.getRightChild());
-            return node;
+            throw new InvalidParameterException("Value " + value + " is not in tree.");
 
         }
 
-        if(node.getLeftChild() == null) {
+        if(node.getValue() == value) {
 
+            return node;
 
+        } else if(value < node.getValue()) {
+
+            return delete(value, node.getLeftChild());
+
+        } else {
+
+            return delete(value, node.getRightChild());
 
         }
 
