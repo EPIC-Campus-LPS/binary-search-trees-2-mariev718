@@ -4,7 +4,6 @@ public class BinarySearchTree {
 
     // PIVs
     private int numNodes = 0;
-    private int numLeafNodes = 0;
     private TreeNode<Integer> root = new TreeNode<>(0, null, null);
 
 
@@ -20,7 +19,6 @@ public class BinarySearchTree {
             TreeNode<Integer> temp = new TreeNode<>(value, null, null);
             root = temp;
             numNodes++;
-            numLeafNodes++;
 
         } else {
 
@@ -56,15 +54,6 @@ public class BinarySearchTree {
 
             numNodes++;
 
-            // If the current node has both children after adding the new node as a child, num leaf node increases by 1
-            // If it only has one child after adding the new node,
-            // leaf node num stays the same because current is not a leaf anymore but the child is
-            if (current.getLeftChild() != null & current.getRightChild() != null) {
-
-                numLeafNodes++;
-
-            }
-
         }
 
     }
@@ -95,7 +84,24 @@ public class BinarySearchTree {
 
     public int countLeafNodes() {
 
-        return numLeafNodes;
+        return countLeafNodes(root);
+
+    }
+
+    public int countLeafNodes(TreeNode<Integer> node) {
+
+        if(node == null) return 0;
+
+        int left = countLeafNodes(node.getLeftChild());
+        int right = countLeafNodes(node.getRightChild());
+
+        if(left + right == 0) {
+
+            return 1;
+
+        }
+
+        return left + right;
 
     }
 
@@ -170,43 +176,47 @@ public class BinarySearchTree {
 
     public int delete(int value) {
 
-        TreeNode<Integer> temp = delete(value, root);
+        if(delete(value, root)) {
 
-//        if(temp.getLeftChild() == null && temp.getRightChild() == null) {
-//
-//            temp = null;
-//
-//        } else if(temp.getLeftChild() != null) {
-//
-//            temp = temp.getLeftChild();
-//
-//        } else if(temp.getRightChild() != null) {
-//
-//            temp = temp.getRightChild();
-//
-//        } else {
-//
-//            TreeNode<Integer> rightTemp = temp.getRightChild();
-//
-//            temp = temp.getLeftChild();
-//
-//            TreeNode<Integer> right = temp.getRightChild();
-//
-//            while(right.getRightChild() != null) {
-//
-//                right = right.getRightChild();
-//
-//            }
-//
-//            right.setRightChild(rightTemp);
-//
-//        }
+            if(root.getLeftChild() != null && root.getRightChild() != null) {
+
+                TreeNode<Integer> right = root.getRightChild();
+
+                root = root.getLeftChild();
+
+                TreeNode<Integer> temp = root;
+
+                while(temp.getRightChild() != null) {
+
+                    temp = temp.getRightChild();
+
+                }
+
+                temp.setRightChild(right);
+
+            } else if(root.getLeftChild() == null && root.getRightChild() == null) {
+
+                root = new TreeNode<Integer>(null, null, null);
+
+            } else if(root.getLeftChild() != null) {
+
+                root = root.getLeftChild();
+
+            } else {
+
+                root = root.getRightChild();
+
+            }
+
+        }
+
+        numNodes--;
 
         return value;
 
     }
 
-    public TreeNode<Integer> delete(int value, TreeNode<Integer> node) {
+    public boolean delete(int value, TreeNode<Integer> node) {
 
         if(node == null) {
 
@@ -216,17 +226,79 @@ public class BinarySearchTree {
 
         if(node.getValue() == value) {
 
-            return node;
-
-        } else if(value < node.getValue()) {
-
-            return delete(value, node.getLeftChild());
-
-        } else {
-
-            return delete(value, node.getRightChild());
+            return true;
 
         }
+
+        if(value < node.getValue()) {
+
+            if (delete(value, node.getLeftChild())) {
+
+                TreeNode<Integer> temp = node.getLeftChild();
+
+                if (temp.getLeftChild() == null && temp.getRightChild() == null) {
+
+                    node.setLeftChild(null);
+
+                } else if (temp.getLeftChild() != null && temp.getRightChild() == null) {
+
+                    node.setLeftChild(temp.getLeftChild());
+
+                } else if (temp.getLeftChild() == null && temp.getRightChild() == null) {
+
+                    node.setLeftChild(temp.getRightChild());
+
+                } else {
+
+                    node.setLeftChild(temp.getLeftChild());
+
+                    while (node.getRightChild() != null) {
+
+                        node = node.getRightChild();
+
+                    }
+
+                    node.setRightChild(temp.getRightChild());
+
+                }
+
+            }
+        } else if(value > node.getValue()) {
+
+            if (delete(value, node.getRightChild())) {
+
+                TreeNode<Integer> temp = node.getRightChild();
+
+                if (temp.getLeftChild() == null && temp.getRightChild() == null) {
+
+                    node.setRightChild(null);
+
+                } else if (temp.getLeftChild() != null && temp.getRightChild() == null) {
+
+                    node.setRightChild(temp.getLeftChild());
+
+                } else if (temp.getLeftChild() == null && temp.getRightChild() == null) {
+
+                    node.setRightChild(temp.getRightChild());
+
+                } else {
+
+                    node.setRightChild(temp.getLeftChild());
+
+                    while (node.getRightChild() != null) {
+
+                        node = node.getRightChild();
+
+                    }
+
+                    node.setRightChild(temp.getRightChild());
+
+                }
+
+            }
+        }
+
+        return false;
 
     }
 
