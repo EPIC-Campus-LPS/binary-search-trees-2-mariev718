@@ -84,6 +84,10 @@ public class BinarySearchTree {
 
     public int countLeafNodes() {
 
+        if(numNodes == 0) return 0;
+
+        if(numNodes == 1) return 1;
+
         return countLeafNodes(root);
 
     }
@@ -127,6 +131,12 @@ public class BinarySearchTree {
 
     public void printInorder() {
 
+        if(numNodes == 0) {
+
+            System.out.println("Tree is empty");
+
+        } else
+
         // calls to same method with constructor
         printInorder(root);
 
@@ -144,7 +154,11 @@ public class BinarySearchTree {
 
     public void printPreorder() {
 
-        printPreorder(root);
+        if(numNodes == 0) {
+
+            System.out.println("Tree is empty");
+
+        } else printPreorder(root);
 
     }
 
@@ -160,7 +174,11 @@ public class BinarySearchTree {
 
     public void printPostorder() {
 
-        printPostorder(root);
+        if(numNodes == 0) {
+
+            System.out.println("Tree is empty");
+
+        } else printPostorder(root);
 
     }
 
